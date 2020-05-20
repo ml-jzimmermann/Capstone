@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  mysql-db:
+    image: mysql/mysql-server:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'capstone'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'l2LdHFGNRb5gfd3hsDu2hr1s'
+      MYSQL_ROOT_PASSWORD: 'l2LdHFGNRb5gfd3hsDu2hr1s'
+    expose:
+      - 3306
+    volumes:
+      - '/mysql:/var/lib/mysql'
+
+  python-backend:
+    build: ./backend
+    restart: always
+    ports:
+      - 81:81
+
+  js-frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - 8080:8080
+

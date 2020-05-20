@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-restful = "*"
+bs4 = "*"
+requests = "*"
+numpy = "*"
+flask-cors = "*"
+sklearn = "*"
+scikit-learn = "*"
+keras = "*"
+nltk = "*"
+spacy = "*"
+tensorflow = "*"
+ktrain = "*"
+
+[requires]
+python_version = "3.6"
