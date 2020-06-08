@@ -52,3 +52,17 @@ def getArticleHeadline(bs):
             output += '{}'.format(chars)
 
         return output.strip()
+
+
+def getArticleText(bs):
+    try:
+        text = bs.find('section', {'class':'article__body'})
+    except AttributeError as e:
+        print("Text could not be found!")
+    else:
+        output = ''
+        for chars in text.getText():
+            output += '{}'.format(chars)
+
+        return output.strip()
+        return output
