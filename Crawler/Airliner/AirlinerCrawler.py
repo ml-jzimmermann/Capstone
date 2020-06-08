@@ -34,5 +34,4 @@ def crawl(endpos):
     write.closeFile()
 
 #endpos immer minus 1
-crawl(2)
-# crawl(228)
+crawl(228)
