@@ -2,6 +2,15 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 from urllib.error import URLError
 from bs4 import BeautifulSoup
+import re
+
+def getAllLinksToArticle( endPos):
+    output = []
+    for i in range(endPos):
+        html = getArticleSite('https://www.airliners.de/ticker?page='+str(i))
+        for link in html.find('div',{'class':'ticker'}).find_all('a', href = re.compile('https://www.airliners.de/*')):
+            if 'href' in link.attrs:
+                output.append(link.attrs['href'])
 
 def getArticleSite(url):
     try:
@@ -42,7 +51,12 @@ def getDate(bs):
 def getArticleHeadline(bs):
     try:
         #getting headline
-        headline = bs.find('h1',{'id':'article-title'}).span.next_sibling
+        headline_temp = bs.find('h1',{'id':'article-title'})#.span.next_sibling
+        try:
+            headline = headline_temp.span.next_sibling
+        except Exception as e:
+            headline = headline_temp
+
     except AttributeError as e:
         print("Title could not be found!")
     else:
@@ -57,12 +71,17 @@ def getArticleHeadline(bs):
 def getArticleText(bs):
     try:
         text = bs.find('section', {'class':'article__body'})
+        lead = bs.find('p', {'class':'lead'})
     except AttributeError as e:
         print("Text could not be found!")
     else:
         output = ''
+        for chars in lead.getText():
+            output += '{}'.format(chars)
+
         for chars in text.getText():
             output += '{}'.format(chars)
 
         return output.strip()
         return output
+

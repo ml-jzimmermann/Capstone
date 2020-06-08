@@ -13,14 +13,15 @@ class CSVwriter:
         try:
             self.csvFile = open(filename, 'w+')
             self.writer = csv.writer(self.csvFile)
-            self.writer.writerow(('Link', 'Text', 'Headline', 'Datum', 'Zeitschrift', 'Rubrik', 'Land', 'Land(Herkunft)', 'Stadt'))
+            #Land(Herkunfst)/Stadt: beziehen sich auf das Land/Stadt aus dem die Zeitschrift/Website stammen
+            self.writer.writerow(('Link', 'Text', 'Headline', 'Datum', 'Zeitschrift', 'Rubrik','Land', 'Land(Herkunft)', 'Stadt'))
         except Exception as e:
             print('OpenError')
             print(e)
 
     def writeRow(self,Link,Text, headLine, Datum, Zeitschrift, Rubrik, Land, LandH, Stadt):
         try:
-              self.writer.writerow((Link, Text, headLine, Datum, Zeitschrift, Zeitschrift, Rubrik, Land, LandH, Stadt))
+              self.writer.writerow((Link, Text, headLine, Datum, Zeitschrift, Rubrik, Land, LandH, Stadt))
         except Exception as e:
             print('WritingError')
             print(e)
