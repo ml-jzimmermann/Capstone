@@ -19,6 +19,7 @@ nltk = "*"
 spacy = "*"
 tensorflow = "*"
 ktrain = "*"
+googlenews = "*"
 
 [requires]
 python_version = "3.6"
