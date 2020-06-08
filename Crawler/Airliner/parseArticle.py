@@ -44,6 +44,7 @@ def getDate(bs):
         #remove time from date, because only months can match to pax
         output = output.split(',')
         output = output.pop(0).split(' ')
+        #reformat date
         output = output.pop(0).split('.').pop(0)+ '.' +mapMonth(output.pop(0))+ '.' +output.pop(0)
         return output
 
@@ -51,7 +52,8 @@ def getDate(bs):
 def getArticleHeadline(bs):
     try:
         #getting headline
-        headline_temp = bs.find('h1',{'id':'article-title'})#.span.next_sibling
+        headline_temp = bs.find('h1',{'id':'article-title'})
+        #if span in headline
         try:
             headline = headline_temp.span.next_sibling
         except Exception as e:
@@ -60,7 +62,7 @@ def getArticleHeadline(bs):
     except AttributeError as e:
         print("Title could not be found!")
     else:
-        #cast headline to text
+        #cast headline to String
         output = ''
         for chars in headline:
             output += '{}'.format(chars)
@@ -70,11 +72,14 @@ def getArticleHeadline(bs):
 
 def getArticleText(bs):
     try:
+        #some articls have only a lead
         text = bs.find('section', {'class':'article__body'})
+        #Lead of article
         lead = bs.find('p', {'class':'lead'})
     except AttributeError as e:
         print("Text could not be found!")
     else:
+        #cast Text to String
         output = ''
         for chars in lead.getText():
             output += '{}'.format(chars)
