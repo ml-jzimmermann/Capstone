@@ -1,8 +1,8 @@
 from GoogleNews import GoogleNews
 
 # date pattern: mm/dd/yyyy
-start = '04/01/2018'
-end = '04/30/2018'
+start = '04/01/2010'
+end = '04/30/2010'
 
 
 news = GoogleNews(lang='en', start=start, end=end)
@@ -13,5 +13,5 @@ news.search(keyword)
 for i in range(10):
     news.getpage(i)
 
-print(len(news.result()))
+print(news.result())
 
