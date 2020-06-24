@@ -17,9 +17,9 @@ def getArticleSite(url):
         html = urlopen(url)
         bs = BeautifulSoup(html.read(), 'lxml')
     except HTTPError as e:
-        return e
+        return 'Error!'
     except URLError as e:
-        return e
+        return 'Error!'
 
     return bs;
 
