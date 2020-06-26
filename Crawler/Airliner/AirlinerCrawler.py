@@ -3,9 +3,9 @@ from csvWriter import CSVwriter
 import re
 import time
 
-def crawl(startpos,endpos):
+def crawl(startpos,endpos, filename):
     write = CSVwriter()
-    write.openFile('airliners.csv')
+    write.openFile(filename+'.csv')
     for i in range(startpos,endpos):
         print("Search for articles on:")
         print('\thttps://www.airliners.de/ticker?page='+str(i))
@@ -35,4 +35,4 @@ def crawl(startpos,endpos):
     write.closeFile()
 
 #endpos immer minus 1
-crawl(1, 229)
+crawl(1, 100, 'bis100')
