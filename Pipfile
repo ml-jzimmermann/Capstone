@@ -20,6 +20,7 @@ spacy = "*"
 tensorflow = "*"
 ktrain = "*"
 googlenews = "*"
+statsmodels = "*"
 
 [requires]
 python_version = "3.6"

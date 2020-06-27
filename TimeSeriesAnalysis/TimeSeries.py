@@ -26,16 +26,33 @@ x_nc = np.linspace(0, s_decomp_nc.trend.values.shape[0], s_decomp_nc.trend.value
 y_nc = np.reshape(s_decomp_nc.trend.values, (-1, 1))
 reg_trend_nc = LinearRegression().fit(x_nc, y_nc)
 
+values = s_decomp_nc.resid.values
+def make_binary(values, upper_bound, lower_bound):
+    for v in values:
+        if v >= upper_bound:
+            yield 1
+        elif v <= lower_bound:
+            yield -1
+        else:
+            yield 0
+
+print(values)
+spread = 0.02
+values = list(make_binary(values, 1 + spread, 1 - spread))
+print(values)
+
 # Plotting
-ts.plot()
+# ts.plot()
+# plt.figure()
+# s_decomp.seasonal.plot(title="Seasonal")
+# plt.figure(figsize=(19, 4))
+# s_decomp_nc.resid.plot(title="Residuen")
+plt.plot(values)
+plt.title(f'Spread: {spread}')
 plt.figure()
-s_decomp.seasonal.plot(title="Seasonal")
-plt.figure(figsize=(19, 4))
-s_decomp_nc.resid.plot(title="Residuen")
-plt.figure()
-plt.plot(s_decomp.trend.index, s_decomp.trend.values)
-plt.plot(s_decomp.trend.index, reg_trend.predict(x), label="Corona included")
-plt.plot(s_decomp_nc.trend.index, reg_trend_nc.predict(x_nc), label="Corona excluded")
-plt.title("Linear Regression on Trend")
-plt.legend()
+# plt.plot(s_decomp.trend.index, s_decomp.trend.values)
+# plt.plot(s_decomp.trend.index, reg_trend.predict(x), label="Corona included")
+# plt.plot(s_decomp_nc.trend.index, reg_trend_nc.predict(x_nc), label="Corona excluded")
+# plt.title("Linear Regression on Trend")
+# plt.legend()
 plt.show()
