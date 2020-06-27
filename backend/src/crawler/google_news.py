@@ -1,9 +1,5 @@
 from GoogleNews import GoogleNews
 
-# date pattern: mm/dd/yyyy
-start = '04/01/2010'
-end = '04/30/2010'
-
 
 def save_to_csv(*, fields, values_list, output_file):
     with open('../../' + output_file, 'w') as output:
@@ -15,12 +11,22 @@ def save_to_csv(*, fields, values_list, output_file):
             output.write(seperator.join(values) + new_line)
 
 
-news = GoogleNews(lang='en', start=start, end=end)
+# date pattern: mm/dd/yyyy
+start = '01/01/2009'
+end = '05/31/2020'
+months = [[start, end], []]
+pages = 5
 
+tags = ['airplane', 'frankfurt', 'business', 'finance', 'economy', 'passengers',
+        'airport', 'fraport', 'vacation', 'holiday']
+
+news = GoogleNews(lang='de', start=start, end=end)
 keyword = 'frankfurt airport'
-news.search(keyword)
+for tag in tags:
+    news.search(tag)
 
-for i in range(10):
+
+for i in range(pages):
     news.getpage(i)
 
 print(news.result())

@@ -36,8 +36,22 @@ def make_binary(values, upper_bound, lower_bound):
         else:
             yield 0
 
-print(values)
-spread = 0.02
+# print(values)
+
+def normalize(values):
+    values = values - 1
+    maximum = np.max(values)
+    minimum = np.min(values)
+    diviser = maximum - minimum
+    values = (values - minimum) * 2
+    values = values / diviser
+    values = -1 + values
+    return values
+
+
+# values = normalize(values)
+
+spread = 0.025
 values = list(make_binary(values, 1 + spread, 1 - spread))
 print(values)
 
@@ -46,10 +60,10 @@ print(values)
 # plt.figure()
 # s_decomp.seasonal.plot(title="Seasonal")
 # plt.figure(figsize=(19, 4))
-# s_decomp_nc.resid.plot(title="Residuen")
-plt.plot(values)
-plt.title(f'Spread: {spread}')
+plt.plot(values, color='red')
+plt.plot(s_decomp_nc.resid.values - 1, color='blue')
 plt.figure()
+# plt.title(f'Spread: {spread}')
 # plt.plot(s_decomp.trend.index, s_decomp.trend.values)
 # plt.plot(s_decomp.trend.index, reg_trend.predict(x), label="Corona included")
 # plt.plot(s_decomp_nc.trend.index, reg_trend_nc.predict(x_nc), label="Corona excluded")
