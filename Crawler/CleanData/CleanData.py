@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_csv('finalbis100.csv')
+data = pd.read_csv('part1.csv')
 pd.set_option('display.max_columns', 9)
 pd.set_option('display.max_rows', 10)
 pd.set_option('display.width', 1000)
