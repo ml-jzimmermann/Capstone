@@ -11,8 +11,6 @@ class TimeSeries():
         self.time_series_df = pd.read_csv("../../data/passagierzahlen.csv", skiprows=1, parse_dates=["Monat/Jahr"],
                                           index_col="Monat/Jahr",
                                           dayfirst=True)
-        print(self.time_series_df)
-
         # Loading data
         self.time_series_df["Passagierzahlen"] = self.time_series_df["Passagierzahlen"].map(
             lambda x: x.replace(".", "")).astype(np.int64)

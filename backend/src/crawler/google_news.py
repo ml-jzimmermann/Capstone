@@ -52,4 +52,3 @@ for time in range(0, 2):
         values_list.append(values)
 
 save_to_csv(fields=fields, values_list=values_list, output_file='google_news_headlines_en.csv')
-

@@ -6,12 +6,58 @@ filename = '../../data/part1.csv'
 csv = pd.read_csv(filename)
 texts = csv[['Headline', 'Datum']].values
 
+for text_id in range(len(texts)):
+    date = texts[text_id][1]
+    if len(date) == 10:
+        date = date[3:]
+    if len(date) == 9:
+        date = date[2:]
+    if date == 'Datum':
+        date = '00.0000'
+    texts[text_id][1] = date
+
 time_series = TimeSeries()
 labels = time_series.get_residuums_dates(spread=0.025)
-
 print(texts)
 print(labels)
+
+from collections import defaultdict
+import matplotlib.pyplot as plt
+
+def plot_data():
+    months_dict = defaultdict(int)
+    for text in texts:
+        months_dict[text[1]] += 1
+
+    print(months_dict)
+
+    keys = months_dict.keys()
+    values = months_dict.values()
+
+    plt.bar(keys, values)
+    plt.xticks(rotation='vertical')
+    plt.show()
+
+
+def merge_data(texts, labels, sliding_window=0):
+    final_texts = []
+    final_labels = []
+    for text_id in range(len(texts)):
+        for label_id in range(len(labels) - sliding_window):
+            if texts[text_id][1] == labels[label_id + sliding_window][1][3:]:
+                final_texts.append(texts[text_id][0])
+                final_labels.append(labels[label_id + sliding_window][0])
+    return final_texts, final_labels
+
+
+texts, labels = merge_data(texts, labels, sliding_window=1)
+print(texts)
+print(labels)
+print(len(texts), len(labels))
+
 exit()
+
+
 # process labels
 
 
