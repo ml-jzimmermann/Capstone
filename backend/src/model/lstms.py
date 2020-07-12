@@ -1,12 +1,17 @@
 import numpy as np
 import pandas as pd
+from time_series_analysis.time_series import TimeSeries
 
-# filename = '../data/headlines.csv'
-# csv = pd.read_csv(filename)
-# texts = csv['headline'].values
-# labels = csv['residuum']
+filename = '../../data/part1.csv'
+csv = pd.read_csv(filename)
+texts = csv[['Headline', 'Datum']].values
 
+time_series = TimeSeries()
+labels = time_series.get_residuums_dates(spread=0.025)
 
+print(texts)
+print(labels)
+exit()
 # process labels
 
 
@@ -17,7 +22,8 @@ from spacy.lookups import Lookups
 import spacy
 from nltk.stem.porter import PorterStemmer
 
-nlp = spacy.load('en_core_web_sm')
+# nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('de_core_news_sm')
 
 stemmer = PorterStemmer()
 text_en = ['this is a very simple sentence about some dogs living in a blue house with a blue small window looking out',
@@ -35,7 +41,7 @@ def lemmatize(text):
     return output
 
 
-for text in text_en:
+for text in text_de:
     lemmatize(text)
     print('________________________________________________________________')
 exit()

@@ -15,7 +15,7 @@ def save_to_csv(*, fields, values_list, output_file):
 start = '01/01/2009'
 end = '05/31/2020'
 months = [[start, end], []]
-pages = 3
+pages = 1
 
 tags = ['airplane', 'frankfurt', 'business', 'finance', 'economy', 'passengers',
         'airport', 'fraport', 'vacation', 'holiday']
