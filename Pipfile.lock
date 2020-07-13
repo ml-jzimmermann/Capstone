@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "242393affb3ea1ce7f75f2395dd5fe6fb70c072e683ab3b5f21c5eb21c3dd795"
+            "sha256": "506fb42ec89ffdf15d9005708719a7c319693f0e0906a8ad33a9665458001e03"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -295,6 +295,14 @@
             "index": "pypi",
             "version": "==1.4.0"
         },
+        "graphviz": {
+            "hashes": [
+                "sha256:088562ef6e3dad5e8dde9389caf4a84f768e65dcaa08238cfcdf36d2b30ccf61",
+                "sha256:f5aad52a652c06825dcc5ee018d920fca26aef339386866094597fb3f2f222ce"
+            ],
+            "index": "pypi",
+            "version": "==0.14.1"
+        },
         "grpcio": {
             "hashes": [
                 "sha256:08362b8b09562179b14db6ffce4b88e1a6a6edac8bccb85dd35f7b214fa5a0f5",
@@ -524,10 +532,10 @@
         },
         "ktrain": {
             "hashes": [
-                "sha256:d34569b5b657f734de968ccd4751c56ee5a374ad275403018e837431b7475096"
+                "sha256:84cb6674524a24be1ee0e5a1b472879fd00c2c408cee7237998c2d0cbba1ba88"
             ],
             "index": "pypi",
-            "version": "==0.18.2"
+            "version": "==0.18.3"
         },
         "langdetect": {
             "hashes": [
@@ -888,6 +896,14 @@
                 "sha256:a50b808ffeb97cb3601dd25981f6b016cbb3d31fbf57a8b8a87428e6158d0c74"
             ],
             "version": "==0.2.8"
+        },
+        "pydot": {
+            "hashes": [
+                "sha256:67be714300c78fda5fd52f79ec994039e3f76f074948c67b5ff539b433ad354f",
+                "sha256:d49c9d4dd1913beec2a997f831543c8cbd53e535b1a739e921642fe416235f01"
+            ],
+            "index": "pypi",
+            "version": "==1.4.1"
         },
         "pygments": {
             "hashes": [

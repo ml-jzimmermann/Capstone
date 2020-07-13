@@ -22,6 +22,8 @@ ktrain = "*"
 googlenews = "*"
 statsmodels = "*"
 lxml = "*"
+pydot = "*"
+graphviz = "*"
 
 [requires]
 python_version = "3.6"

@@ -59,11 +59,11 @@ class TimeSeries():
     def _make_binary(self, values, upper_bound, lower_bound):
         for v in values:
             if v >= upper_bound:
-                yield 1
+                yield 2
             elif v <= lower_bound:
-                yield -1
-            else:
                 yield 0
+            else:
+                yield 1
 
     def plot_results(self, list):
         # Plotting
