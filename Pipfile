@@ -21,6 +21,7 @@ tensorflow = "*"
 ktrain = "*"
 googlenews = "*"
 statsmodels = "*"
+lxml = "*"
 
 [requires]
 python_version = "3.6"

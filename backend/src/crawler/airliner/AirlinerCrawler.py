@@ -28,11 +28,11 @@ def crawl(startpos,endpos, filename):
                         # print("write to file")
                         if 'Exklusiv für airliners+ Abonnenten' not  in text:
                             print("\t\tadd article from link: "+link.attrs['href'])
-                            write.writeRow(link.attrs['href'], text, headLine,date, 'Airliner.de', 'Allgemein', 'Global', 'Deutschland', 'Berlin')
+                            write.writeRow(link.attrs['href'], text, headLine,date, 'airliner.de', 'Allgemein', 'Global', 'Deutschland', 'Berlin')
 
 
 
     write.closeFile()
 
 #endpos immer minus 1
-crawl(1, 100, 'bis100')
+crawl(1, 5, 'short_test')

@@ -1,9 +1,8 @@
 from GoogleNews import GoogleNews
-import json
 
 
 def save_to_csv(*, fields, values_list, output_file):
-    with open('../../' + output_file, 'w') as output:
+    with open(output_file, 'w') as output:
         seperator = ','
         new_line = '\n'
         field_list = seperator.join(fields)
@@ -16,7 +15,7 @@ def save_to_csv(*, fields, values_list, output_file):
 start = '01/01/2009'
 end = '05/31/2020'
 months = [[start, end], []]
-pages = 2
+pages = 1
 
 tags = ['airplane', 'frankfurt', 'business', 'finance', 'economy', 'passengers',
         'airport', 'fraport', 'vacation', 'holiday']
@@ -42,20 +41,14 @@ for time in range(0, 2):
     for tag in tags:
         news.search(tag)
         for i in range(pages):
-            print(f'tag: {tag}')
-            print(f'start: {start} - end: {end}')
-            print(f'page: {i}')
-            print('________________________________________________________________')
             news.getpage(i)
-            print(len(news.result()))
-            print(news.result())
-            for entry in news.result():
-                values = []
-                values.append(entry['title'].replace(',', ' ').replace('"', ''))
-                values.append(entry['media'].replace(',', ' ').replace('"', ''))
-                values.append(entry['date'].replace(',', ' ').replace('"', ''))
-                values.append(entry['link'].replace(',', ' ').replace('"', ''))
-                values_list.append(values)
+
+    for entry in news.result():
+        values = []
+        values.append(entry['title'].replace(',', ' ').replace('"', ''))
+        values.append(entry['media'].replace(',', ' ').replace('"', ''))
+        values.append(entry['date'].replace(',', ' ').replace('"', ''))
+        values.append(entry['link'].replace(',', ' ').replace('"', ''))
+        values_list.append(values)
 
 save_to_csv(fields=fields, values_list=values_list, output_file='google_news_headlines_en.csv')
-

@@ -1,10 +1,61 @@
 import numpy as np
 import pandas as pd
+from time_series_analysis.time_series import TimeSeries
 
-# filename = '../data/headlines.csv'
-# csv = pd.read_csv(filename)
-# texts = csv['headline'].values
-# labels = csv['residuum']
+filename = '../../data/part1.csv'
+csv = pd.read_csv(filename)
+texts = csv[['Headline', 'Datum']].values
+
+for text_id in range(len(texts)):
+    date = texts[text_id][1]
+    if len(date) == 10:
+        date = date[3:]
+    if len(date) == 9:
+        date = date[2:]
+    if date == 'Datum':
+        date = '00.0000'
+    texts[text_id][1] = date
+
+time_series = TimeSeries()
+labels = time_series.get_residuums_dates(spread=0.025)
+print(texts)
+print(labels)
+
+from collections import defaultdict
+import matplotlib.pyplot as plt
+
+def plot_data():
+    months_dict = defaultdict(int)
+    for text in texts:
+        months_dict[text[1]] += 1
+
+    print(months_dict)
+
+    keys = months_dict.keys()
+    values = months_dict.values()
+
+    plt.bar(keys, values)
+    plt.xticks(rotation='vertical')
+    plt.show()
+
+
+def merge_data(texts, labels, sliding_window=0):
+    final_texts = []
+    final_labels = []
+    for text_id in range(len(texts)):
+        for label_id in range(len(labels) - sliding_window):
+            if texts[text_id][1] == labels[label_id + sliding_window][1][3:]:
+                final_texts.append(texts[text_id][0])
+                final_labels.append(labels[label_id + sliding_window][0])
+    return final_texts, final_labels
+
+
+texts, labels = merge_data(texts, labels, sliding_window=1)
+print(texts)
+print(labels)
+print(len(texts), len(labels))
+
+exit()
 
 
 # process labels
@@ -17,7 +68,8 @@ from spacy.lookups import Lookups
 import spacy
 from nltk.stem.porter import PorterStemmer
 
-nlp = spacy.load('en_core_web_sm')
+# nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('de_core_news_sm')
 
 stemmer = PorterStemmer()
 text_en = ['this is a very simple sentence about some dogs living in a blue house with a blue small window looking out',
@@ -35,7 +87,7 @@ def lemmatize(text):
     return output
 
 
-for text in text_en:
+for text in text_de:
     lemmatize(text)
     print('________________________________________________________________')
 exit()
