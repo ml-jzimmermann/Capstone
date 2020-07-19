@@ -31,8 +31,8 @@ for year in range(2009, 2021):
 
 print(month_limits)
 values_list = []
-
-for time in range(0, 2):
+for time in range(0, len(month_limits) - 1):
+    hashset = set()
     start = month_limits[time]
     end = month_limits[time + 1]
     print(f'start: {start} - end: {end}')
@@ -45,10 +45,13 @@ for time in range(0, 2):
 
     for entry in news.result():
         values = []
-        values.append(entry['title'].replace(',', ' ').replace('"', ''))
-        values.append(entry['media'].replace(',', ' ').replace('"', ''))
-        values.append(entry['date'].replace(',', ' ').replace('"', ''))
-        values.append(entry['link'].replace(',', ' ').replace('"', ''))
-        values_list.append(values)
+        current_hash = hash(entry['link'])
+        if not current_hash in hashset:
+            values.append(entry['title'].replace(',', ' ').replace('"', '').replace('„', '').replace('“', ''))
+            values.append(entry['media'].replace(',', ' ').replace('"', ''))
+            values.append(entry['date'].replace(',', ' ').replace('"', ''))
+            values.append(entry['link'].replace(',', ' ').replace('"', ''))
+            values_list.append(values)
+            hashset.add(current_hash)
 
 save_to_csv(fields=fields, values_list=values_list, output_file='google_news_headlines_en.csv')
