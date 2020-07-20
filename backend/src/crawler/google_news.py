@@ -1,12 +1,12 @@
 from GoogleNews import GoogleNews
 
 
-def save_to_csv(*, fields, values_list, output_file):
-    with open(output_file, 'w') as output:
+def save_to_csv(*, values_list, output_file):
+    with open(output_file, 'a') as output:
         seperator = ','
         new_line = '\n'
-        field_list = seperator.join(fields)
-        output.write(field_list + new_line)
+        # field_list = seperator.join(fields)
+        # output.write(field_list + new_line)
         for values in values_list:
             output.write(seperator.join(values) + new_line)
 
@@ -15,7 +15,7 @@ def save_to_csv(*, fields, values_list, output_file):
 start = '01/01/2009'
 end = '05/31/2020'
 months = [[start, end], []]
-pages = 1
+pages = 3
 
 tags = ['airplane', 'frankfurt', 'business', 'finance', 'economy', 'passengers',
         'airport', 'fraport', 'vacation', 'holiday']
@@ -29,9 +29,9 @@ for year in range(2009, 2021):
             m = '0' + str(m)
         month_limits.append(f'{m}/01/{year}')
 
-print(month_limits)
+# print(month_limits)
 values_list = []
-for time in range(0, len(month_limits) - 1):
+for time in range(112, len(month_limits) - 1):
     hashset = set()
     start = month_limits[time]
     end = month_limits[time + 1]
@@ -43,15 +43,19 @@ for time in range(0, len(month_limits) - 1):
         for i in range(pages):
             news.getpage(i)
 
-    for entry in news.result():
-        values = []
-        current_hash = hash(entry['link'])
-        if not current_hash in hashset:
-            values.append(entry['title'].replace(',', ' ').replace('"', '').replace('„', '').replace('“', ''))
-            values.append(entry['media'].replace(',', ' ').replace('"', ''))
-            values.append(entry['date'].replace(',', ' ').replace('"', ''))
-            values.append(entry['link'].replace(',', ' ').replace('"', ''))
-            values_list.append(values)
-            hashset.add(current_hash)
+    if len(news.result()) == 0:
+        print('No news found for: ', time)
+        break
+    else:
+        for entry in news.result():
+            values = []
+            current_hash = hash(entry['link'])
+            if not current_hash in hashset:
+                values.append(entry['title'].replace(',', ' ').replace('"', '').replace('„', '').replace('“', ''))
+                values.append(entry['media'].replace(',', ' ').replace('"', ''))
+                values.append(entry['date'].replace(',', ' ').replace('"', ''))
+                values.append(entry['link'].replace(',', ' ').replace('"', ''))
+                values_list.append(values)
+                hashset.add(current_hash)
 
-save_to_csv(fields=fields, values_list=values_list, output_file='google_news_headlines_en.csv')
+save_to_csv(values_list=values_list, output_file='google_news_headlines_en.csv')
