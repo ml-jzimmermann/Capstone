@@ -58,4 +58,4 @@ for time in range(112, len(month_limits) - 1):
                 values_list.append(values)
                 hashset.add(current_hash)
 
-save_to_csv(values_list=values_list, output_file='google_news_headlines_en.csv')
+save_to_csv(values_list=values_list, output_file='../../data/google_news_headlines_en.csv')

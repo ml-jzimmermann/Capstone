@@ -41,7 +41,5 @@ with open('../../data/merged_ktrain.csv', 'w') as output_file:
     output_file.write('\n')
     for text, label in zip(texts, labels):
         i = i + 1
-        if i == 1000:
-            break
         t = text.replace(',', '').replace('"', '').replace("'", '')
         output_file.write(f'{t},{int(label[0])},{int(label[1])},{int(label[2])}\n')
