@@ -11,7 +11,7 @@ print(len(data))
 
 epochs = 3
 learning_rate = 5e-5
-batch_size = 8
+batch_size = 512
 max_length = 21
 max_words = 25000
 

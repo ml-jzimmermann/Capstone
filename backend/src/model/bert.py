@@ -3,7 +3,10 @@ import ktrain
 
 csv_file = '../../data/merged_ktrain.csv'
 
+learning_rate = 2e-2
+epochs = 4
 max_length = 21
+batch_size = 128
 max_words = 25000
 
 # todo: shuffle input data
@@ -13,7 +16,7 @@ max_words = 25000
 
 model = ktrain.text.text_classifier(name='bert', train_data=(x_train, y_train), preproc=preprocessing)
 
-learner = ktrain.get_learner(model=model, train_data=(x_train, y_train), val_data=(x_test, y_test), batch_size=32)
+learner = ktrain.get_learner(model=model, train_data=(x_train, y_train), val_data=(x_test, y_test), batch_size=batch_size)
 
-learner.fit_onecycle(lr=2e-2, epochs=4)
+learner.fit_onecycle(lr=learning_rate, epochs=epochs)
 
