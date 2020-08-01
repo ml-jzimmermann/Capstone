@@ -64,7 +64,7 @@ def merge_data(texts, labels, sliding_window=0):
 texts, labels = merge_data(texts, labels, sliding_window=1)
 # print(texts)
 # print(labels)
-print('data dimension', len(texts), len(labels))
+print('data dimension:', len(texts), len(labels))
 
 # process labels
 
@@ -137,6 +137,15 @@ classes = labels.shape[1]
 print('output dimension:', labels.shape)
 # print(labels)
 
+def split_test_data(data, split=0.1, random_seed=42):
+    np.random.seed(random_seed)
+    np.random.shuffle(data)
+    split_item = math.floor(split * len(data))
+    print('split at: ', split_item)
+    x_test, y_test = data[:split_item, 0], data[:split_item, 1:]
+    x_train, y_train = data[split_item:, 0], data[split_item:, 1:]
+    return x_train, y_train, x_test, y_test
+
 
 # model
 from tensorflow.keras.layers import Input, Embedding, LSTM, Dense, Bidirectional
@@ -157,13 +166,36 @@ softmax_1 = Dense(units=classes, activation='softmax')(bi_lstm_3)
 model = Model(inputs=input_1, outputs=softmax_1)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
 
-print(model.summary())
-exit()
-
-log_dir = f'../../logs/airliner_lstm_{classes}_{epochs}_{features}_{batch_size}_{units}/'
-tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
+#log_dir = f'../../logs/airliner_lstm_{classes}_{epochs}_{features}_{batch_size}_{units}/'
+#tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # from tensorflow.keras.utils import plot_model
 # plot_model(model, to_file='../../images/model_plot_lstm.png', show_shapes=True, show_layer_names=True)
+# callbacks=[tensorboard]
 
-model.fit(x=sequences, y=labels, validation_split=0.3, batch_size=batch_size, epochs=epochs, callbacks=[tensorboard])
+model.fit(x=sequences, y=labels, validation_split=0.1, batch_size=batch_size, epochs=epochs)
+
+exit()
+# explain predictions
+import seaborn as sn
+from sklearn.metrics import classification_report, confusion_matrix
+
+# calculate confusion matrix
+y = [np.argmax(v) for v in y_val]
+x = [np.argmax(x) for x in model.predict(x_val)]
+confusion = confusion_matrix(y, x)
+classification = classification_report(y, x)
+print(confusion)
+print(classification)
+
+# print confusion matrix
+import matplotlib.pyplot as plt
+labels = ['joy', 'trust', 'fear', 'surprise', 'sadness', 'disgust', 'anger', 'anticipation', 'neutral']
+cm_df = pd.DataFrame(confusion, labels, labels)
+sn.set(font_scale=1.1, font='Arial')
+ax = sn.heatmap(cm_df, cmap="Blues", annot=True, annot_kws={"size": 11}, cbar=False)
+ax.set_xlabel("Actual")
+ax.set_ylabel("Predicted")
+ax.set_title("Confusion Matrix")
+plt.show()
+
