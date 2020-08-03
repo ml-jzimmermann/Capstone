@@ -9,7 +9,7 @@ texts = csv[['title', 'date']].values
 print(len(texts))
 
 time_series = TimeSeries()
-labels = time_series.get_residuums_dates(spread=0.025)
+labels = time_series.get_residuums_dates(spread=0.015)
 
 
 def filter_dates(texts):
