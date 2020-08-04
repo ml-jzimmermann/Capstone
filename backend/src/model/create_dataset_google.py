@@ -9,7 +9,7 @@ texts = csv[['title', 'date']].values
 print(len(texts))
 
 time_series = TimeSeries()
-labels = time_series.get_residuums_dates(spread=0.015)
+labels = time_series.get_residuums_dates(spread=0.025, four_cat=True)
 
 
 def filter_dates(texts):
@@ -53,10 +53,10 @@ from tensorflow.keras.utils import to_categorical
 labels = to_categorical(labels)
 
 i = 0
-with open('../../data/merged_ktrain_google_en.csv', 'w') as output_file:
-    output_file.write('headline,less,equal,more')
+with open('../../data/merged_ktrain_google_en_four.csv', 'w') as output_file:
+    output_file.write('headline,least,less,more,most')
     output_file.write('\n')
     for text, label in zip(texts, labels):
         i = i + 1
         t = text.replace(',', '').replace('"', '').replace("'", '')
-        output_file.write(f'{t},{int(label[0])},{int(label[1])},{int(label[2])}\n')
+        output_file.write(f'{t},{int(label[0])},{int(label[1])},{int(label[2])},{int(label[3])}\n')

@@ -32,19 +32,22 @@ class TimeSeries():
         y_nc = np.reshape(self.s_decomp_nc.trend.values, (-1, 1))
         reg_trend_nc = LinearRegression().fit(x_nc, y_nc)
 
-    def get_residuums_dates(self, *, spread=None):
-        values = self.get_residuums(spread=spread)
+    def get_residuums_dates(self, *, spread=None, four_cat=False):
+        values = self.get_residuums(spread=spread, four_cat=four_cat)
         dates = self.time_series_df.index
         dates = [d.strftime('%d.%m.%Y') for d in dates]
         return list(zip(values, dates))
 
-    def get_residuums(self, *, spread=None):
+    def get_residuums(self, *, spread=None, four_cat=False):
         values = self.s_decomp_nc.resid.values
 
         if spread is None:
             return values
         else:
-            return list(self._make_binary(values, 1 + spread, 1 - spread))
+            if four_cat:
+                return list(self._make_fouer(values, 1+spread, 1, 1-spread))
+            else:
+                return list(self._make_binary(values, 1 + spread, 1 - spread))
 
     def _normalize(self, values):
         values = values - 1
@@ -65,6 +68,19 @@ class TimeSeries():
             else:
                 yield 1
 
+    # TODO: value 2 dosent work
+    def _make_fouer(self, values, upper_bound, middle_bound, lower_bound):
+        for v in values:
+            if v >= upper_bound:
+                yield 3
+            elif v >= middle_bound:
+                yield 2
+            elif v >= lower_bound:
+                yield 1
+            else:
+                yield 0
+
+
     def plot_results(self, list):
         # Plotting
         # ts.plot()
@@ -72,6 +88,9 @@ class TimeSeries():
         # s_decomp.seasonal.plot(title="Seasonal")
         # plt.figure(figsize=(19, 4))
         plt.plot(list, color='blue')
+        plt.plot([1.025]*len(list), color='red')
+        plt.plot([0.975]*len(list), color='red')
+
         plt.figure()
         # plt.title(f'Spread: {spread}')
         # plt.plot(s_decomp.trend.index, s_decomp.trend.values)
