@@ -45,7 +45,7 @@ class TimeSeries():
             return values
         else:
             if four_cat:
-                return list(self._make_fouer(values, 1+spread, 1, 1-spread))
+                return list(self._make_fouer(values, 1 + spread, 1, 1 - spread))
             else:
                 return list(self._make_binary(values, 1 + spread, 1 - spread))
 
@@ -80,7 +80,6 @@ class TimeSeries():
             else:
                 yield 0
 
-
     def plot_results(self, list, spread=None):
         # Plotting
         # ts.plot()
@@ -88,9 +87,9 @@ class TimeSeries():
         # s_decomp.seasonal.plot(title="Seasonal")
         # plt.figure(figsize=(19, 4))
         plt.plot(list, color='blue')
-        if spread != None:
-            plt.plot([1+spread]*len(list), color='red')
-            plt.plot([1-spread]*len(list), color='red')
+        if spread is not None:
+            plt.plot([1 + spread] * len(list), color='red')
+            plt.plot([1 - spread] * len(list), color='red')
 
         plt.figure()
         # plt.title(f'Spread: {spread}')

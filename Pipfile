@@ -24,6 +24,7 @@ statsmodels = "*"
 lxml = "*"
 pydot = "*"
 graphviz = "*"
+seaborn = "*"
 
 [requires]
 python_version = "3.6"

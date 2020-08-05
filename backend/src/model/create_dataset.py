@@ -2,7 +2,6 @@ from time_series_analysis.time_series import TimeSeries
 import pandas as pd
 import numpy as np
 
-
 input_csv_text = '../../data/airliner_completed.csv'
 csv = pd.read_csv(input_csv_text)
 texts = csv[['Headline', 'Datum']].values
@@ -19,13 +18,7 @@ for text_id in range(len(texts)):
 
 time_series = TimeSeries()
 time_series.plot_results(time_series.get_residuums(), spread=0.025)
-exit()
-# labels = time_series.get_residuums_dates(spread=0.025, four_cat=False)
-# TODO: add if make fouer works
-labels = time_series.get_residuums(spread=0.025, four_cat=True)
-
-# time_series.plot_results(labels, spread=0.025)
-
+labels = time_series.get_residuums_dates(spread=0.025, four_cat=True)
 
 
 def merge_data(texts, labels, sliding_window=0):
@@ -41,6 +34,7 @@ def merge_data(texts, labels, sliding_window=0):
 
 texts, labels = merge_data(texts, labels, sliding_window=1)
 from tensorflow.keras.utils import to_categorical
+
 labels = to_categorical(labels)
 
 i = 0
