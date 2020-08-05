@@ -18,12 +18,14 @@ for text_id in range(len(texts)):
     texts[text_id][1] = date
 
 time_series = TimeSeries()
-time_series.plot_results(time_series.get_residuums())
+time_series.plot_results(time_series.get_residuums(), spread=0.025)
+exit()
 # labels = time_series.get_residuums_dates(spread=0.025, four_cat=False)
 # TODO: add if make fouer works
-labels = time_series.get_residuums_dates(spread=0.025, four_cat=True)
+labels = time_series.get_residuums(spread=0.025, four_cat=True)
 
-# time_series.plot_results(labels)
+# time_series.plot_results(labels, spread=0.025)
+
 
 
 def merge_data(texts, labels, sliding_window=0):

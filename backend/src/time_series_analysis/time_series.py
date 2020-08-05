@@ -81,15 +81,16 @@ class TimeSeries():
                 yield 0
 
 
-    def plot_results(self, list):
+    def plot_results(self, list, spread=None):
         # Plotting
         # ts.plot()
         # plt.figure()
         # s_decomp.seasonal.plot(title="Seasonal")
         # plt.figure(figsize=(19, 4))
         plt.plot(list, color='blue')
-        plt.plot([1.025]*len(list), color='red')
-        plt.plot([0.975]*len(list), color='red')
+        if spread != None:
+            plt.plot([1+spread]*len(list), color='red')
+            plt.plot([1-spread]*len(list), color='red')
 
         plt.figure()
         # plt.title(f'Spread: {spread}')
