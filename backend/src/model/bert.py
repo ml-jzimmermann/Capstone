@@ -70,7 +70,7 @@ def train_model(four_classes=True, epochs=10):
 
     learning_rate = 5e-5
     batch_size = 32
-    max_length = 21
+    max_length = 8
 
     def split_test_data(data, split=0.1, random_seed=42):
         np.random.seed(random_seed)
@@ -81,7 +81,9 @@ def train_model(four_classes=True, epochs=10):
         x_train, y_train = data[split_item:, 0], data[split_item:, 1:]
         return x_train, y_train, x_test, y_test
 
-    x_train, y_train, x_val, y_val = split_test_data(data, split=0.15, random_seed=4242)
+    x_train, y_train, x_val, y_val = split_test_data(np.array(data), split=0.15, random_seed=4242)
+    print(len(x_train), len(x_val))
+    print(len(y_train), len(y_val))
 
     def generate_balanced_weights(y_train):
         y_labels = [y.argmax() for y in y_train]
