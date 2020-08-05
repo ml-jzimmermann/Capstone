@@ -17,8 +17,9 @@ for text_id in range(len(texts)):
     texts[text_id][1] = date
 
 time_series = TimeSeries()
-time_series.plot_results(time_series.get_residuums(), spread=0.025)
-labels = time_series.get_residuums_dates(spread=0.025, four_cat=True)
+spread = 0.01
+time_series.plot_results(time_series.get_residuums(), spread=spread)
+labels = time_series.get_residuums_dates(spread=spread, four_cat=True)
 
 
 def merge_data(texts, labels, sliding_window=0):
@@ -32,13 +33,13 @@ def merge_data(texts, labels, sliding_window=0):
     return final_texts, final_labels
 
 
-texts, labels = merge_data(texts, labels, sliding_window=1)
+texts, labels = merge_data(texts, labels, sliding_window=6)
 from tensorflow.keras.utils import to_categorical
 
 labels = to_categorical(labels)
 
 i = 0
-with open('../../data/merged_ktrain_four.csv', 'w') as output_file:
+with open('../../data/merged_ktrain_four_six_months.csv', 'w') as output_file:
     output_file.write('headline,least,less,more,most')
     output_file.write('\n')
     for text, label in zip(texts, labels):

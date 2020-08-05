@@ -8,6 +8,7 @@ import spacy
 import matplotlib.pyplot as plt
 import seaborn as sn
 from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
 import collections
 
 # csv_file = '../../data/merged_ktrain_google_en.csv'
@@ -21,7 +22,9 @@ print(len(data))
 # preprocess text
 nlp = spacy.load('de_core_news_sm')
 stemmer = PorterStemmer()
-stoplist = ['der', 'und', ':', '»', '«']
+# stoplist = ['der', 'und', ':', '»', '«']
+stoplist = stopwords.words('german')
+
 
 def test_token(text):
     doc = nlp(text)
@@ -32,17 +35,19 @@ def test_token(text):
     return output
 
 
-def lemmatize(texts):
+def lemmatize_remove_stop(texts, stoplist):
     lemmatized_texts = []
     for document in list(nlp.pipe(texts, disable=['tagger', 'parser', 'ner'])):
         current_text = []
         for token in document:
-            current_text.append(token.lemma_)
+            if token.lemma_ not in stoplist:
+                current_text.append(token.lemma_)
+
         lemmatized_texts.append(' '.join(current_text))
     return lemmatized_texts
 
 
-texts = lemmatize(texts)
+texts = lemmatize_remove_stop(texts, stoplist)
 
 
 def count_plot_words(texts):
@@ -50,15 +55,11 @@ def count_plot_words(texts):
     for text in texts:
         wordlist.extend(text.split(' '))
     counter = collections.Counter(wordlist)
-
-    print(counter)
-    # plt.bar(range(0, 10), list(counter.values())[:10])
-    plt.xticks(list(counter.keys())[:10])
-    plt.plot([1,2,3,4])
+    ddict = {k: v for k, v in sorted(counter.items(), key=lambda item: item[1], reverse=True)}
+    # return ddict
+    plt.bar(list(ddict.keys())[:75], list(ddict.values())[:75])
+    plt.xticks(rotation=90)
     plt.show()
-
-count_plot_words(texts)
-exit()
 
 
 data = []

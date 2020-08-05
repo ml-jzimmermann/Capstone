@@ -91,7 +91,6 @@ class TimeSeries():
             plt.plot([1 + spread] * len(list), color='red')
             plt.plot([1 - spread] * len(list), color='red')
 
-        plt.figure()
         # plt.title(f'Spread: {spread}')
         # plt.plot(s_decomp.trend.index, s_decomp.trend.values)
         # plt.plot(s_decomp.trend.index, reg_trend.predict(x), label="Corona included")
