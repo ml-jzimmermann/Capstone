@@ -6,7 +6,7 @@ from tensorflow.keras.utils import to_categorical
 def generate_dataset(four_classes=True, spread=0.01, sliding_window=1):
     input_csv_text = '../../data/airliner_completed.csv'
     csv = pd.read_csv(input_csv_text)
-    texts = csv[['Headline', 'Datum']].values
+    texts = csv[['Text', 'Datum']].values
 
     for text_id in range(len(texts)):
         date = texts[text_id][1]
