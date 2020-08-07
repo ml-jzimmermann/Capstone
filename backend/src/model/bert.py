@@ -13,7 +13,7 @@ from nltk.corpus import stopwords
 import collections
 
 
-def train_model(four_classes=True, epochs=10):
+def train_model(four_classes=True, epochs=8):
     if four_classes:
         class_names = ['least', 'less', 'more', 'most']
     else:
@@ -67,6 +67,7 @@ def train_model(four_classes=True, epochs=10):
     else:
         for t, label in zip(texts, labels):
             data.append([t, label[0], label[1], label[2]])
+    #print('data:', data[0])
 
     learning_rate = 5e-5
     batch_size = 32
@@ -82,11 +83,14 @@ def train_model(four_classes=True, epochs=10):
         return x_train, y_train, x_test, y_test
 
     x_train, y_train, x_val, y_val = split_test_data(np.array(data), split=0.15, random_seed=4242)
+    y_train = [[int(e) for e in l] for l in y_train]
+    y_val = [[int(e) for e in l] for l in y_val]
     print(len(x_train), len(x_val))
     print(len(y_train), len(y_val))
+    #print(y_train[423])
 
     def generate_balanced_weights(y_train):
-        y_labels = [y.argmax() for y in y_train]
+        y_labels = [y.argmax() for y in np.array(y_train)]
         class_weights = class_weight.compute_class_weight('balanced', np.unique(y_labels), y_labels)
         weight_dict = {}
         for key in range(len(class_weights)):
