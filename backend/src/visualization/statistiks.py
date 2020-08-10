@@ -53,7 +53,11 @@ def plot_barchart_words_withoutstopwords(filename, top=50,if_google=False, witho
         texts = stemming(texts)
 
     # nltk.download('stopwords')
-    stoplist = stopwords.words('german')
+    stoplist = None
+    if if_google:
+        stoplist = stopwords.words('english')
+    else:
+        stoplist = stopwords.words('german')
     texts = lemmatize_remove_stop(texts, stoplist, if_google)
     wordlist = []
     for text in texts:
@@ -69,8 +73,8 @@ def plot_barchart_words_withoutstopwords(filename, top=50,if_google=False, witho
 
 
 
-def plot_barchart_words(filename, top=50):
-    text = load_data()
+def plot_barchart_words(filename, top=50, if_google=False):
+    text = load_data(filename, if_google)
     data = countWords(text, top)
     plot(data)
 
@@ -89,4 +93,8 @@ def plot(data):
     plt.show()
 
 # plot_barchart_words('../../data/airliner_completed.csv')
-plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=False, with_stemming=False)
+# plot_barchart_words_withoutstopwords('../../data/airliner_completed.csv', if_google=False, without_symbol=True, with_stemming=True)
+
+
+plot_barchart_words('../../data/merged_ktrain_google_en_four.csv', if_google=True)
+plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=True, with_stemming=False)
