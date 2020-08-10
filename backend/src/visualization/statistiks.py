@@ -45,27 +45,34 @@ def remove_symbols(data):
 
     return new_wordList
 
-def plot_barchart_words_withoutstopwords(filename, top=50,if_google=False, without_symbol=False, with_stemming=False):
+def plot_barchart_words_withoutstopwords(filename, top=50,if_google=False, print_len=False, without_symbol=False, with_stemming=False):
     text = load_data(filename,if_google)
     texts = [element[0] for element in text]
+
+    if print_len:
+        plot_len(texts)
 
     if with_stemming:
         texts = stemming(texts)
 
-    # nltk.download('stopwords')
     stoplist = None
     if if_google:
         stoplist = stopwords.words('english')
     else:
         stoplist = stopwords.words('german')
+
     texts = lemmatize_remove_stop(texts, stoplist, if_google)
+
+    if print_len:
+        plot_len(texts)
+
+
     wordlist = []
     for text in texts:
         wordlist.extend(text.split(' '))
 
     if without_symbol:
         wordlist = remove_symbols(wordlist)
-
 
     counter = collections.Counter(wordlist)
     counter = dict(counter.most_common(top))
@@ -86,15 +93,22 @@ def countWords(text,top):
 
     return dict(col.most_common(top))
 
+
+def plot_len(data):
+    plt.bar(range(0, len(data)), sorted([len(v.split(" ")) for v in data],reverse=True))
+    plt.show()
+
 def plot(data):
+    plt.plot([200]*len(data.keys()), color='red')
+
     plt.bar(data.keys(), data.values())
-    # plt.xlim(0,5)
+
     plt.xticks(rotation=90)
     plt.show()
 
 # plot_barchart_words('../../data/airliner_completed.csv')
-# plot_barchart_words_withoutstopwords('../../data/airliner_completed.csv', if_google=False, without_symbol=True, with_stemming=True)
+plot_barchart_words_withoutstopwords('../../data/airliner_completed.csv', if_google=False, print_len=True, top=100,without_symbol=True, with_stemming=True)
 
 
-plot_barchart_words('../../data/merged_ktrain_google_en_four.csv', if_google=True)
-plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=True, with_stemming=False)
+# plot_barchart_words('../../data/merged_ktrain_google_en_four.csv', if_google=True)
+# plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=True, with_stemming=False)
