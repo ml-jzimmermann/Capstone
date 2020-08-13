@@ -296,12 +296,18 @@ def train_model_mulit(four_classes=True, epochs=8):
             plt.show()
 
         # TODO: concat en and de
+
+
         data = []
         if four_classes:
-            for t, label in zip(texts, labels):
+            for t, label in zip(texts_de, labels_de):
+                data.append([t, label[0], label[1], label[2], label[3]])
+            for t, label in zip(texts_en, labels_en):
                 data.append([t, label[0], label[1], label[2], label[3]])
         else:
-            for t, label in zip(texts, labels):
+            for t, label in zip(texts_de, labels_de):
+                data.append([t, label[0], label[1], label[2]])
+            for t, label in zip(texts_en, labels_en):
                 data.append([t, label[0], label[1], label[2]])
         # print('data:', data[0])
 
@@ -360,4 +366,4 @@ def train_model_mulit(four_classes=True, epochs=8):
         # ax.set_title("Confusion Matrix")
         # plt.show()
 
-train_model_mulit()
+train_model_mulit(four_classes=False)
