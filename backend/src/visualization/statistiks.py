@@ -106,9 +106,9 @@ def plot(data):
     plt.xticks(rotation=90)
     plt.show()
 
-# plot_barchart_words('../../data/airliner_completed.csv')
+plot_barchart_words('../../data/airliner_completed.csv')
 plot_barchart_words_withoutstopwords('../../data/airliner_completed.csv', if_google=False, print_len=True, top=100,without_symbol=True, with_stemming=True)
 
 
-# plot_barchart_words('../../data/merged_ktrain_google_en_four.csv', if_google=True)
-# plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=True, with_stemming=False)
+plot_barchart_words('../../data/merged_ktrain_google_en_four.csv', if_google=True)
+plot_barchart_words_withoutstopwords('../../data/merged_ktrain_google_en_four.csv', if_google=True, without_symbol=True, with_stemming=False)
