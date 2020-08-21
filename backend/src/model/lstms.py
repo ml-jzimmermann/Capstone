@@ -1,6 +1,14 @@
 import numpy as np
 import pandas as pd
 from time_series_analysis.time_series import TimeSeries
+import tensorflow as tf
+import random
+from sklearn.utils import class_weight
+import math
+
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
 
 filename = '../../data/airliner_completed.csv'
 csv = pd.read_csv(filename)
@@ -74,10 +82,13 @@ print('data dimension:', len(texts), len(labels))
 from spacy.lemmatizer import Lemmatizer
 from spacy.lookups import Lookups
 import spacy
+from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
 # nlp = spacy.load('en_core_web_sm')
 nlp = spacy.load('de_core_news_sm')
+nlp_en = spacy.load('en_core_web_sm')
+stoplist_en = stopwords.words('english')
 
 stemmer = PorterStemmer()
 text_en = ['this is a very simple sentence about some dogs living in a blue house with a blue small window looking out',
@@ -100,7 +111,8 @@ def lemmatize(texts):
     for document in list(nlp.pipe(texts, disable=['tagger', 'parser', 'ner'])):
         current_text = []
         for token in document:
-            current_text.append(token.lemma_)
+            if token.lemma_ not in stoplist_en:
+                current_text.append(token.lemma_)
         lemmatized_texts.append(current_text)
     return lemmatized_texts
 
@@ -116,7 +128,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 max_words = 25000
-max_length = 21
+max_length = 12
 tokenizer = Tokenizer(num_words=max_words)
 tokenizer.fit_on_texts(texts)
 sequences = tokenizer.texts_to_sequences(texts)
@@ -135,67 +147,82 @@ labels = np.array(labels)
 classes = labels.shape[1]
 # print(classes)
 print('output dimension:', labels.shape)
-# print(labels)
+class_names = ['less', 'equal', 'more']
 
-def split_test_data(data, split=0.1, random_seed=42):
+
+def split_test_data(x, y, split=0.1, random_seed=None):
+    if len(x) != len(y):
+        raise ValueError('lengths do not match!')
     np.random.seed(random_seed)
-    np.random.shuffle(data)
-    split_item = math.floor(split * len(data))
+    np.random.shuffle(x)
+    np.random.seed(random_seed)
+    np.random.shuffle(y)
+    split_item = math.floor(split * len(y))
     print('split at: ', split_item)
-    x_test, y_test = data[:split_item, 0], data[:split_item, 1:]
-    x_train, y_train = data[split_item:, 0], data[split_item:, 1:]
+    x_test, y_test = x[:split_item], y[:split_item]
+    x_train, y_train = x[split_item:], y[split_item:]
     return x_train, y_train, x_test, y_test
 
 
+x_train, y_train, x_test, y_test = split_test_data(x=sequences, y=labels, split=0.15,
+                                                   random_seed=random.randrange(10000))
+
+
+def generate_balanced_weights(y_train):
+    y_labels = [y.argmax() for y in np.array(y_train)]
+    class_weights = class_weight.compute_class_weight('balanced', np.unique(y_labels), y_labels)
+    weight_dict = {}
+    for key in range(len(class_weights)):
+        weight_dict[key] = class_weights[key]
+    return weight_dict
+
+
+class_weight_dict = generate_balanced_weights(y_train)
 # model
 from tensorflow.keras.layers import Input, Embedding, LSTM, Dense, Bidirectional
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import TensorBoard
 
-epochs = 10
-batch_size = 32
-features = 200
-units = 16
+epochs = 15
+batch_size = 64
+features = 500
+units = 256
 input_1 = Input(shape=(max_length,))
 embed_1 = Embedding(input_dim=(max_words - 1), output_dim=features, input_length=max_length)(input_1)
 bi_lstm_1 = Bidirectional(LSTM(units=units, activation='tanh', dropout=0.2, return_sequences=True))(embed_1)
-# bi_lstm_2 = Bidirectional(LSTM(units=32, activation='tanh', dropout=0.2, return_sequences=True))(bi_lstm_1)
-bi_lstm_3 = Bidirectional(LSTM(units=units, activation='tanh', dropout=0.2, return_sequences=False))(bi_lstm_1)
+bi_lstm_2 = Bidirectional(LSTM(units=units, activation='tanh', dropout=0.2, return_sequences=True))(bi_lstm_1)
+bi_lstm_3 = Bidirectional(LSTM(units=units, activation='tanh', dropout=0.2, return_sequences=False))(bi_lstm_2)
 softmax_1 = Dense(units=classes, activation='softmax')(bi_lstm_3)
 
 model = Model(inputs=input_1, outputs=softmax_1)
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
 
-#log_dir = f'../../logs/airliner_lstm_{classes}_{epochs}_{features}_{batch_size}_{units}/'
-#tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
+# log_dir = f'../../logs/airliner_lstm_{classes}_{epochs}_{features}_{batch_size}_{units}/'
+# tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # from tensorflow.keras.utils import plot_model
 # plot_model(model, to_file='../../images/model_plot_lstm.png', show_shapes=True, show_layer_names=True)
 # callbacks=[tensorboard]
 
-model.fit(x=sequences, y=labels, validation_split=0.1, batch_size=batch_size, epochs=epochs)
+model.fit(x=x_train, y=y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=epochs, class_weight=class_weight_dict)
 
-exit()
 # explain predictions
 import seaborn as sn
 from sklearn.metrics import classification_report, confusion_matrix
 
 # calculate confusion matrix
-y = [np.argmax(v) for v in y_val]
-x = [np.argmax(x) for x in model.predict(x_val)]
+y = [np.argmax(v) for v in y_test]
+x = [np.argmax(x) for x in model.predict(x_test)]
 confusion = confusion_matrix(y, x)
 classification = classification_report(y, x)
 print(confusion)
 print(classification)
 
 # print confusion matrix
-import matplotlib.pyplot as plt
-labels = ['joy', 'trust', 'fear', 'surprise', 'sadness', 'disgust', 'anger', 'anticipation', 'neutral']
-cm_df = pd.DataFrame(confusion, labels, labels)
+cm_df = pd.DataFrame(confusion, class_names, class_names)
 sn.set(font_scale=1.1, font='Arial')
-ax = sn.heatmap(cm_df, cmap="Blues", annot=True, annot_kws={"size": 11}, cbar=False)
+ax = sn.heatmap(cm_df, cmap="Blues", annot=True, annot_kws={"size": 11}, cbar=False, fmt='g')
 ax.set_xlabel("Actual")
 ax.set_ylabel("Predicted")
 ax.set_title("Confusion Matrix")
 plt.show()
-
