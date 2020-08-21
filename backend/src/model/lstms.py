@@ -121,7 +121,7 @@ def lemmatize(texts):
 texts = lemmatize(texts)
 # print(texts[42])
 
-# plot_data_length(texts)
+plot_data_length(texts)
 
 # tokenization
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -185,8 +185,8 @@ from tensorflow.keras.callbacks import TensorBoard
 
 epochs = 15
 batch_size = 64
-features = 500
-units = 256
+features = 200
+units = 32
 input_1 = Input(shape=(max_length,))
 embed_1 = Embedding(input_dim=(max_words - 1), output_dim=features, input_length=max_length)(input_1)
 bi_lstm_1 = Bidirectional(LSTM(units=units, activation='tanh', dropout=0.2, return_sequences=True))(embed_1)
@@ -201,7 +201,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categ
 # tensorboard = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 # from tensorflow.keras.utils import plot_model
-# plot_model(model, to_file='../../images/model_plot_lstm.png', show_shapes=True, show_layer_names=True)
+# plot_model(model, to_file='../../images/model_plot_lstm_32.png', show_shapes=True, show_layer_names=True)
 # callbacks=[tensorboard]
 
 model.fit(x=x_train, y=y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=epochs, class_weight=class_weight_dict)
