@@ -1,5 +1,4 @@
 # Capstone
 Capstone Project 2020
 
-Finetuning a transformer model (BERT) to classify news headlines that predict the amounts of customer for airlines.
-
+Fine-tuning a transformer model (BERT) to classify news headlines to predict the amounts of customers for airlines.
